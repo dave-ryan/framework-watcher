@@ -57,11 +57,11 @@ export default {
     getStuff: function () {
       axios
         .all([
-          axios.get("/repos/vuejs/vue"),
-          axios.get("/repos/angular/angular.js"),
-          axios.get("/repos/emberjs/ember.js"),
-          axios.get("/repos/sveltejs/svelte"),
-          axios.get("/repos/facebook/react"),
+          axios.get("https://api.github.com/repos/vuejs/vue"),
+          axios.get("https://api.github.com/repos/angular/angular.js"),
+          axios.get("https://api.github.com/repos/emberjs/ember.js"),
+          axios.get("https://api.github.com/repos/sveltejs/svelte"),
+          axios.get("https://api.github.com/repos/facebook/react"),
         ])
         .then(
           axios.spread((vue, angular, ember, svelte, react) => {
