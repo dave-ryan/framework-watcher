@@ -14,14 +14,13 @@
     <div v-for="repo in repos" :key="repo.id">
       <h1>
         <a :href="repo.clone_url" alt="" target="_blank">
-          {{ repo.name }}
+          {{ repo.name.charAt(0).toUpperCase() + repo.name.slice(1) }}
         </a>
       </h1>
       <p class="description">{{ repo.description }}</p>
       <p>Stars: {{ repo.stargazers_count }}</p>
       <p>Watchers: {{ repo.subscribers_count }}</p>
       <p>Forks: {{ repo.forks }}</p>
-      <p>Weight: {{ repo.weight }}</p>
     </div>
   </div>
 </template>
@@ -48,13 +47,7 @@ export default {
   components: {},
   data: function () {
     return {
-      repos: {
-        vue: {},
-        angular: {},
-        ember: {},
-        svelte: {},
-        react: {},
-      },
+      repos: [],
     };
   },
   created: function () {
@@ -73,36 +66,40 @@ export default {
         .then(
           axios.spread((vue, angular, ember, svelte, react) => {
             console.log(vue, angular, ember, svelte, react);
-            this.repos.vue = vue.data;
-            this.repos.angular = angular.data;
-            this.repos.ember = ember.data;
-            this.repos.svelte = svelte.data;
-            this.repos.react = react.data;
+            this.repos.push(vue.data);
+            this.repos.push(angular.data);
+            this.repos.push(ember.data);
+            this.repos.push(svelte.data);
+            this.repos.push(react.data);
 
-            for (var key in this.repos) {
-              this.repos[key].weight =
-                2 * this.repos[key].stargazers_count +
-                this.repos[key].forks +
-                3 * this.repos[key].subscribers_count;
-              if (this.repos[key].stargazers_count > 1000) {
-                this.repos[key].stargazers_count =
-                  (Math.round(this.repos[key].stargazers_count / 1000) * 1000)
+            this.repos.forEach((repo) => {
+              repo.weight =
+                2 * repo.stargazers_count +
+                repo.forks +
+                3 * repo.subscribers_count;
+              if (repo.stargazers_count > 1000) {
+                repo.stargazers_count =
+                  (Math.round(repo.stargazers_count / 1000) * 1000)
                     .toString()
                     .slice(0, -3) + "k";
               }
-              if (this.repos[key].subscribers_count > 1000) {
-                this.repos[key].subscribers_count =
-                  (Math.round(this.repos[key].subscribers_count / 1000) * 1000)
+              if (repo.subscribers_count > 1000) {
+                repo.subscribers_count =
+                  (Math.round(repo.subscribers_count / 1000) * 1000)
                     .toString()
                     .slice(0, -3) + "k";
               }
-              if (this.repos[key].forks > 1000) {
-                this.repos[key].forks =
-                  (Math.round(this.repos[key].forks / 1000) * 1000)
+              if (repo.forks > 1000) {
+                repo.forks =
+                  (Math.round(repo.forks / 1000) * 1000)
                     .toString()
                     .slice(0, -3) + "k";
               }
-            }
+            });
+
+            this.repos.sort((a, b) =>
+              a.weight < b.weight ? 1 : b.weight < a.weight ? -1 : 0
+            );
           })
         );
     },
