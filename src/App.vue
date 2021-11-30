@@ -74,8 +74,8 @@ export default {
 
             this.repos.forEach((repo) => {
               repo.weight =
-                2 * repo.stargazers_count +
-                repo.forks +
+                repo.stargazers_count +
+                5 * repo.forks +
                 3 * repo.subscribers_count;
               if (repo.stargazers_count > 1000) {
                 repo.stargazers_count =
