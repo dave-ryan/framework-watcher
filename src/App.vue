@@ -65,7 +65,7 @@ export default {
         ])
         .then(
           axios.spread((vue, angular, ember, svelte, react) => {
-            console.log(vue, angular, ember, svelte, react);
+            // console.log(vue, angular, ember, svelte, react);
             this.repos.push(vue.data);
             this.repos.push(angular.data);
             this.repos.push(ember.data);
